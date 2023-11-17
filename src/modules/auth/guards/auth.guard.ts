@@ -20,7 +20,7 @@ export class AuthGuard implements CanActivate {
       const authToken = authorization.replace(/bearer/gim, '').trim();
       const resp = await this.validateJwt.validateToken(authToken);
       request.decodedData = resp;
-      request['user'] = resp.payload;
+      request['user'] = resp;
       return true;
     } catch (error) {
       throw new ForbiddenException(
