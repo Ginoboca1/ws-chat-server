@@ -12,18 +12,19 @@ import {
 import { UsersService } from './users.service';
 import { Response } from 'express';
 import { UpdateUserDto } from './dto/update-user';
-import { AuthGuard } from '../auth/guards/auth.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorators';
 import { Role } from 'src/common/enums/role.enum';
 import { UserRequest } from 'src/common/interfaces/user-request';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Roles(Role.ADMIN, Role.USER)
-  @UseGuards(AuthGuard, RolesGuard)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Get()
   async getAllUsers(@Req() _req: UserRequest, @Res() res: Response) {
     try {
@@ -35,7 +36,7 @@ export class UsersController {
   }
 
   @Roles(Role.ADMIN, Role.USER)
-  @UseGuards(AuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('/:id')
   async getUserById(@Param('id') id: string, @Res() res: Response) {
     try {
@@ -47,7 +48,7 @@ export class UsersController {
   }
 
   @Roles(Role.ADMIN)
-  @UseGuards(AuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Put('/:id')
   async updateUser(
     @Param('id') id: string,
@@ -63,7 +64,7 @@ export class UsersController {
   }
 
   @Roles(Role.ADMIN)
-  @UseGuards(AuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete('/:id')
   async deleteUser(@Param('id') id: string, @Res() res: Response) {
     try {
