@@ -46,16 +46,8 @@ export class AuthService {
   }
 
   async Login(user) {
-    // const { email, password } = body;
-    // const userFounded = await this.userModel.findOne({ email });
-    // if (!userFounded) {
-    //   throw new NotFoundException('User not founded');
-    // }
-    // const isMatch = await comparePassword(password, userFounded.password);
-    // if (!isMatch) {
-    //   throw new UnauthorizedException('Email or Password incorrects');
-    // }
     const payload = {
+      id: user._id,
       name: user.name,
       role: user.role,
     };

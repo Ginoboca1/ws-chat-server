@@ -17,17 +17,17 @@ import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorators';
 import { Role } from 'src/common/enums/role.enum';
 import { UserRequest } from 'src/common/interfaces/user-request';
-import { AuthGuard } from '@nestjs/passport';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Roles(Role.ADMIN, Role.USER)
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
-  async getAllUsers(@Req() _req: UserRequest, @Res() res: Response) {
+  async getAllUsers(@Req() req: UserRequest, @Res() res: Response) {
     try {
+      console.log(req.user);
       const data = await this.usersService.getUsers();
       return res.status(200).json(data);
     } catch (error) {
