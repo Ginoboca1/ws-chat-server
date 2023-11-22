@@ -2,15 +2,15 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Post } from './models/post.schema';
-
+import { IPost } from '../../common/interfaces/post';
 @Injectable()
 export class PostsService {
   constructor(@InjectModel(Post.name) private postModel: Model<Post>) {}
-  async createPost(body) {
-    const { title, autors, content, categories } = body;
+  async createPost(body: IPost) {
+    const { title, authors, content, categories } = body;
     const postCreated = await this.postModel.create({
       title,
-      autors,
+      authors,
       content,
       categories,
     });
