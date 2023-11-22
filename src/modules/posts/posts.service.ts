@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Post } from './models/post.schema';
 import { IPost } from '../../common/interfaces/post';
+
 @Injectable()
 export class PostsService {
   constructor(@InjectModel(Post.name) private postModel: Model<Post>) {}
@@ -33,7 +34,7 @@ export class PostsService {
     }
     return post;
   }
-  async updatePost(id: string, body): Promise<string> {
+  async updatePost(id: string, body: IPost): Promise<string> {
     const updatedPost = await this.postModel.findByIdAndUpdate(id, body).lean();
     if (!updatedPost) {
       throw new NotFoundException('Post not founded');

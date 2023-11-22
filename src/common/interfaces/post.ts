@@ -1,6 +1,6 @@
 export interface IPost {
-  title: string;
-  authors: string[];
-  content: string;
-  categories: string[];
+  title?: string;
+  authors?: string[];
+  content?: string;
+  categories?: string[];
 }
