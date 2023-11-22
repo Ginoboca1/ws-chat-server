@@ -3,6 +3,7 @@ import { AuthService } from './auth.service';
 import { Response } from 'express';
 import { SignUp } from './dto/auth-dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
+import { UserRequest } from 'src/common/interfaces/user-request';
 
 @Controller('auth')
 export class AuthController {
@@ -20,7 +21,7 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('/login')
-  async Login(@Req() req, @Res() res: Response) {
+  async Login(@Req() req: UserRequest, @Res() res: Response) {
     try {
       const result = await this.authService.Login(req.user);
       res.status(200).json(result);

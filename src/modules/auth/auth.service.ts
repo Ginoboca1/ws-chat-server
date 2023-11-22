@@ -9,6 +9,7 @@ import { Model } from 'mongoose';
 import { SignUp } from './dto/auth-dto';
 import { comparePassword, hashPassword } from 'src/utils/bcrypt-passwords';
 import { JwtService } from '@nestjs/jwt';
+import { UserPayload } from 'src/common/interfaces/payload-user';
 
 @Injectable()
 export class AuthService {
@@ -45,9 +46,9 @@ export class AuthService {
     return { message: 'User created successfully' };
   }
 
-  async Login(user) {
+  async Login(user: UserPayload) {
     const payload = {
-      id: user._id,
+      id: user.id,
       name: user.name,
       role: user.role,
     };
