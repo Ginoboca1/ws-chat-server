@@ -27,7 +27,6 @@ export class UsersController {
   @Get()
   async getAllUsers(@Req() req: UserRequest, @Res() res: Response) {
     try {
-      console.log(req.user);
       const data = await this.usersService.getUsers();
       return res.status(200).json(data);
     } catch (error) {

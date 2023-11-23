@@ -7,21 +7,23 @@ import { IPost } from '../../common/interfaces/post';
 @Injectable()
 export class PostsService {
   constructor(@InjectModel(Post.name) private postModel: Model<Post>) {}
-  async createPost(body: IPost) {
-    const { title, authors, content, categories } = body;
+  async createPost({ body, userId, userName }) {
+    const { title, content, categories } = body;
     const postCreated = await this.postModel.create({
       title,
-      authors,
+      author: userName,
       content,
       categories,
+      userId,
     });
     if (!postCreated) {
       throw new NotFoundException();
     }
     return { message: 'Post created successfully' };
   }
-  async getPosts(): Promise<Post[]> {
-    const posts = await this.postModel.find();
+  async getPosts(page = 1, limit = 10): Promise<Post[]> {
+    const skip = (page - 1) * limit;
+    const posts = await this.postModel.find().skip(skip).limit(limit).exec();
     if (!posts || posts.length === 0) {
       throw new NotFoundException('No posts here');
     }
@@ -47,5 +49,19 @@ export class PostsService {
       throw new NotFoundException('Post not founded');
     }
     return { message: 'Post deleted successfully' };
+  }
+
+  async getPostByUser(userId) {
+    const posts = await this.postModel
+      .find({ userId })
+      .populate({
+        path: 'userId',
+        select: '_id',
+      })
+      .exec();
+    if (!posts) {
+      throw new NotFoundException();
+    }
+    return posts;
   }
 }

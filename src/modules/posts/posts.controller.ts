@@ -4,8 +4,11 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Post,
   Put,
+  Query,
+  Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
@@ -24,9 +27,15 @@ import { IPost } from 'src/common/interfaces/post';
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
   @Post()
-  async createPost(@Body() body: PostDto, @Res() res: Response) {
+  async createPost(@Req() req, @Body() body: PostDto, @Res() res: Response) {
     try {
-      const data = await this.postsService.createPost(body);
+      const userId = req.user.id;
+      const userName = req.user.name;
+      const data = await this.postsService.createPost({
+        body,
+        userId,
+        userName,
+      });
       return res.json(data);
     } catch (error) {
       return res.status(error.code).json({ message: error.message });
@@ -34,9 +43,13 @@ export class PostsController {
   }
 
   @Get()
-  async getPosts(@Res() res: Response) {
+  async getPosts(
+    @Query('page', new ParseIntPipe()) page: number = 1,
+    @Query('limit', new ParseIntPipe()) limit: number = 10,
+    @Res() res: Response,
+  ) {
     try {
-      const data = await this.postsService.getPosts();
+      const data = await this.postsService.getPosts(page, limit);
       return res.status(200).json(data);
     } catch (error) {
       return res.status(error.status).json({ message: error.message });
@@ -75,6 +88,16 @@ export class PostsController {
       return res.status(200).json(data);
     } catch (error) {
       return res.status(error.status).json({ message: error.message });
+    }
+  }
+
+  @Get('/user/:userId')
+  async getPostByUser(@Param('userId') userId, @Res() res: Response) {
+    try {
+      const data = await this.postsService.getPostByUser(userId);
+      return res.status(200).json(data);
+    } catch (error) {
+      return res.status(error.code).json({ message: error.message });
     }
   }
 }
