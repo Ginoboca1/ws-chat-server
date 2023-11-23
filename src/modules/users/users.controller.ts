@@ -22,7 +22,7 @@ import { UserRequest } from 'src/common/interfaces/user-request';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Roles(Role.ADMIN, Role.USER)
+  @Roles(Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
   async getAllUsers(@Req() req: UserRequest, @Res() res: Response) {
@@ -34,7 +34,7 @@ export class UsersController {
     }
   }
 
-  @Roles(Role.ADMIN, Role.USER)
+  @Roles(Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('/:id')
   async getUserById(@Param('id') id: string, @Res() res: Response) {

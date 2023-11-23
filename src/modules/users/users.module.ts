@@ -11,6 +11,7 @@ import { ValidateToken } from '../auth/jwt/jwt.validate';
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
   ],
   controllers: [UsersController],
+  exports: [UsersService],
   providers: [UsersService, AuthService, ValidateToken],
 })
 export class UsersModule {}

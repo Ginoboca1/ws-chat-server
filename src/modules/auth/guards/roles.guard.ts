@@ -7,6 +7,7 @@ import { Role } from 'src/common/enums/role.enum';
 export class RolesGuard implements CanActivate {
   constructor(private readonly reflector: Reflector) {}
   canActivate(context: ExecutionContext): boolean {
+    console.log('funciona');
     const roles = this.reflector.getAllAndOverride<Role[]>(ROLE_KEY, [
       context.getHandler(),
       context.getClass(),

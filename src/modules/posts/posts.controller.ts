@@ -20,6 +20,7 @@ import { RolesGuard } from '../auth/guards/roles.guard';
 import { Response } from 'express';
 import { PostDto } from './dto/post';
 import { IPost } from 'src/common/interfaces/post';
+import { UserRequest } from 'src/common/interfaces/user-request';
 
 @Roles(Role.ADMIN, Role.USER)
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -27,7 +28,11 @@ import { IPost } from 'src/common/interfaces/post';
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
   @Post()
-  async createPost(@Req() req, @Body() body: PostDto, @Res() res: Response) {
+  async createPost(
+    @Req() req: UserRequest,
+    @Body() body: PostDto,
+    @Res() res: Response,
+  ) {
     try {
       const userId = req.user.id;
       const userName = req.user.name;
@@ -70,14 +75,16 @@ export class PostsController {
   @Put('/:id')
   async updatePost(
     @Param('id') id: string,
+    @Req() req: UserRequest,
     @Body() body: IPost,
     @Res() res: Response,
   ) {
     try {
-      const data = await this.postsService.updatePost(id, body);
+      const usersId = req.user.id;
+      const data = await this.postsService.updatePost(usersId, id, body);
       res.status(201).json({ data });
     } catch (error) {
-      return res.status(error.code).json({ message: error.message });
+      throw error;
     }
   }
 

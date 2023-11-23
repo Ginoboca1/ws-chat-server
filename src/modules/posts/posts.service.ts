@@ -3,10 +3,13 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Post } from './models/post.schema';
 import { IPost } from '../../common/interfaces/post';
-
+import { UsersService } from '../users/users.service';
 @Injectable()
 export class PostsService {
-  constructor(@InjectModel(Post.name) private postModel: Model<Post>) {}
+  constructor(
+    @InjectModel(Post.name) private postModel: Model<Post>,
+    private userService: UsersService,
+  ) {}
   async createPost({ body, userId, userName }) {
     const { title, content, categories } = body;
     const postCreated = await this.postModel.create({
@@ -19,7 +22,7 @@ export class PostsService {
     if (!postCreated) {
       throw new NotFoundException();
     }
-    return { message: 'Post created successfully' };
+    return { message: 'Post created successfully', id: postCreated._id };
   }
   async getPosts(page = 1, limit = 10): Promise<Post[]> {
     const skip = (page - 1) * limit;
@@ -36,12 +39,18 @@ export class PostsService {
     }
     return post;
   }
-  async updatePost(id: string, body: IPost): Promise<string> {
+  async updatePost(usersId: string, id: string, body: IPost) {
+    const post = await this.postModel.findById(id);
+    const { userId } = post;
+    const idString = userId.toString();
+    if (usersId === idString) {
+      throw new NotFoundException('No es igual');
+    }
     const updatedPost = await this.postModel.findByIdAndUpdate(id, body).lean();
     if (!updatedPost) {
       throw new NotFoundException('Post not founded');
     }
-    return 'Post updated successfully';
+    return { message: 'Post updated successfully', id: updatedPost._id };
   }
   async deletePost(id: string): Promise<object> {
     const postDeleted = await this.postModel.findByIdAndDelete(id);
@@ -51,7 +60,7 @@ export class PostsService {
     return { message: 'Post deleted successfully' };
   }
 
-  async getPostByUser(userId) {
+  async getPostByUser(userId: string) {
     const posts = await this.postModel
       .find({ userId })
       .populate({
