@@ -33,11 +33,16 @@ export class UsersService {
     return user;
   }
 
-  async updateUser(id: string, body: UpdateUserDto) {
+  async updateUser(tokenId: string, paramId: string, body: UpdateUserDto) {
+    if (!(tokenId === paramId)) {
+      throw new UnauthorizedException('You can only edit your own profile');
+    }
     if (body.role || body.password) {
       throw new UnauthorizedException('Role and password cannot be changed');
     }
-    const updatedUser = await this.userModel.findByIdAndUpdate(id, body).lean();
+    const updatedUser = await this.userModel
+      .findByIdAndUpdate(paramId, body)
+      .lean();
     if (!updatedUser) {
       throw new NotFoundException('User not founded');
     }
@@ -57,7 +62,6 @@ export class UsersService {
       }
       return { message: 'User deleted successfully' };
     } catch (error) {
-      console.log('error');
       throw new BadRequestException(error.message);
     }
   }

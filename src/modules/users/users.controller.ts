@@ -34,7 +34,7 @@ export class UsersController {
     }
   }
 
-  @Roles(Role.ADMIN)
+  @Roles(Role.ADMIN, Role.USER)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('/:id')
   async getUserById(@Param('id') id: string, @Res() res: Response) {
@@ -46,16 +46,18 @@ export class UsersController {
     }
   }
 
-  @Roles(Role.ADMIN)
+  @Roles(Role.ADMIN, Role.USER)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Put('/:id')
   async updateUser(
     @Param('id') id: string,
     @Body() body: UpdateUserDto,
     @Res() res: Response,
+    @Req() req: UserRequest,
   ) {
     try {
-      const data = await this.usersService.updateUser(id, body);
+      const userId = req.user.id;
+      const data = await this.usersService.updateUser(id, userId, body);
       return res.status(200).json({ data });
     } catch (error) {
       throw error;

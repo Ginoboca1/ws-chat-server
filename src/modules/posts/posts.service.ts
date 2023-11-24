@@ -36,14 +36,14 @@ export class PostsService {
     }
     return post;
   }
-  async updatePost(usersId: string, id: string, body: IPost) {
-    const post = await this.postModel.findById(id);
-    const { userId } = post;
-    const idString = userId.toString();
-    if (usersId === idString) {
-      throw new NotFoundException('No es igual');
+  async updatePost(req, idParam: string, body: IPost) {
+    const { id, role } = req.user;
+    if (!(id.toString() === idParam || role === 'admin')) {
+      throw new NotFoundException('You can only edit your own post');
     }
-    const updatedPost = await this.postModel.findByIdAndUpdate(id, body).lean();
+    const updatedPost = await this.postModel
+      .findByIdAndUpdate(idParam, body)
+      .lean();
     if (!updatedPost) {
       throw new NotFoundException('Post not founded');
     }

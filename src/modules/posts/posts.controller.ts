@@ -79,8 +79,7 @@ export class PostsController {
     @Res() res: Response,
   ) {
     try {
-      const usersId = req.user.id;
-      const data = await this.postsService.updatePost(usersId, id, body);
+      const data = await this.postsService.updatePost(req, id, body);
       res.status(201).json({ data });
     } catch (error) {
       throw error;
