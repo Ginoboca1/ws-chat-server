@@ -15,7 +15,7 @@ export class AuthController {
       await this.authService.SignUp(body);
       res.status(200).json({ message: 'SignUp successfully' });
     } catch (error) {
-      return res.status(error.status).json({ message: error.message });
+      throw error;
     }
   }
 
@@ -26,8 +26,7 @@ export class AuthController {
       const result = await this.authService.Login(req.user);
       res.status(200).json(result);
     } catch (error) {
-      res.status(500).json({ message: error.message });
-      console.log(error.message);
+      throw error;
     }
   }
 }

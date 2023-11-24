@@ -43,7 +43,7 @@ export class PostsController {
       });
       return res.json(data);
     } catch (error) {
-      return res.status(error.code).json({ message: error.message });
+      throw error;
     }
   }
 
@@ -57,7 +57,7 @@ export class PostsController {
       const data = await this.postsService.getPosts(page, limit);
       return res.status(200).json(data);
     } catch (error) {
-      return res.status(error.status).json({ message: error.message });
+      throw error;
     }
   }
 
@@ -67,8 +67,7 @@ export class PostsController {
       const data = await this.postsService.getPostById(id);
       return res.status(200).json({ data });
     } catch (error) {
-      console.log('error', error);
-      return res.status(error.status).json({ message: error.message });
+      throw error;
     }
   }
 
@@ -94,7 +93,7 @@ export class PostsController {
       const data = await this.postsService.deletePost(id);
       return res.status(200).json(data);
     } catch (error) {
-      return res.status(error.status).json({ message: error.message });
+      throw error;
     }
   }
 
@@ -104,7 +103,7 @@ export class PostsController {
       const data = await this.postsService.getPostByUser(userId);
       return res.status(200).json(data);
     } catch (error) {
-      return res.status(error.code).json({ message: error.message });
+      throw error;
     }
   }
 }

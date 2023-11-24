@@ -30,7 +30,7 @@ export class UsersController {
       const data = await this.usersService.getUsers();
       return res.status(200).json(data);
     } catch (error) {
-      return res.status(error.status).json({ message: error.message });
+      throw error;
     }
   }
 
@@ -42,7 +42,7 @@ export class UsersController {
       const data = await this.usersService.getUserById(id);
       return res.status(200).json({ data });
     } catch (error) {
-      return res.status(error.status).json({ message: error.message });
+      throw error;
     }
   }
 
@@ -58,7 +58,7 @@ export class UsersController {
       const data = await this.usersService.updateUser(id, body);
       return res.status(200).json({ data });
     } catch (error) {
-      return res.status(error.status).json({ message: error.message });
+      throw error;
     }
   }
 
@@ -70,7 +70,7 @@ export class UsersController {
       const data = await this.usersService.removeUser(id);
       return res.status(200).json(data);
     } catch (error) {
-      return res.status(error.status).json({ message: error.message });
+      throw error;
     }
   }
 }

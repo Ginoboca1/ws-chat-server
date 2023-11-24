@@ -3,13 +3,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Post } from './models/post.schema';
 import { IPost } from '../../common/interfaces/post';
-import { UsersService } from '../users/users.service';
+
 @Injectable()
 export class PostsService {
-  constructor(
-    @InjectModel(Post.name) private postModel: Model<Post>,
-    private userService: UsersService,
-  ) {}
+  constructor(@InjectModel(Post.name) private postModel: Model<Post>) {}
   async createPost({ body, userId, userName }) {
     const { title, content, categories } = body;
     const postCreated = await this.postModel.create({
@@ -35,7 +32,7 @@ export class PostsService {
   async getPostById(id: string) {
     const post = await this.postModel.findById(id).lean().exec();
     if (!post) {
-      throw new NotFoundException('User not founded');
+      throw new NotFoundException('Post not founded');
     }
     return post;
   }
@@ -68,8 +65,8 @@ export class PostsService {
         select: '_id',
       })
       .exec();
-    if (!posts) {
-      throw new NotFoundException();
+    if (!posts || posts.length === 0) {
+      throw new NotFoundException(`This user doesn't have any posts.`);
     }
     return posts;
   }

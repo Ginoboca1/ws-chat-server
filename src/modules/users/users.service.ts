@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { User } from './models/user.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { UpdateUserDto } from './dto/update-user';
 
 @Injectable()
@@ -48,12 +48,16 @@ export class UsersService {
 
   async removeUser(id: string) {
     try {
+      if (!mongoose.isValidObjectId(id)) {
+        throw new BadRequestException('Invalid user ID');
+      }
       const userDeleted = await this.userModel.findByIdAndDelete(id);
       if (!userDeleted) {
         throw new NotFoundException('User not founded');
       }
       return { message: 'User deleted successfully' };
     } catch (error) {
+      console.log('error');
       throw new BadRequestException(error.message);
     }
   }
