@@ -70,4 +70,22 @@ export class PostsService {
     }
     return posts;
   }
+
+  async searchPosts(query: string, page: number, limit: number) {
+    console.log('Query', query);
+    const results = await this.postModel
+      .find({
+        $or: [
+          { title: { $regex: query, $options: 'i' } },
+          { content: { $regex: query, $options: 'i' } },
+        ],
+      })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .exec();
+    if (!results) {
+      throw new NotFoundException('Posts not founded');
+    }
+    return results;
+  }
 }
