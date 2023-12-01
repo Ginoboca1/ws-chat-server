@@ -16,7 +16,7 @@ export class AdminsService {
       .find({ role: 'admin' })
       .select('-password')
       .lean()
-      .exec();
+      .lean();
     if (!admins || admins.length === 0) {
       throw new NotFoundException('There are no admins here');
     }
@@ -24,10 +24,7 @@ export class AdminsService {
   }
 
   async getAdminsPosts(): Promise<Post[]> {
-    // Obtén todos los posts cuyo userId pertenezca a un usuario con rol de admin
-    const admins = await this.postModel
-      .find() // Asegúrate de que el campo 'user' sea la referencia correcta en tu modelo de post
-      .exec();
+    const admins = await this.postModel.find().lean();
 
     return admins;
   }

@@ -23,14 +23,14 @@ export class PostsService {
   }
   async getPosts(page = 1, limit = 10): Promise<Post[]> {
     const skip = (page - 1) * limit;
-    const posts = await this.postModel.find().skip(skip).limit(limit).exec();
+    const posts = await this.postModel.find().skip(skip).limit(limit).lean();
     if (!posts || posts.length === 0) {
       throw new NotFoundException('No posts here');
     }
     return posts;
   }
   async getPostById(id: string) {
-    const post = await this.postModel.findById(id).lean().exec();
+    const post = await this.postModel.findById(id).lean().lean();
     if (!post) {
       throw new NotFoundException('Post not founded');
     }
@@ -64,15 +64,16 @@ export class PostsService {
         path: 'userId',
         select: '_id',
       })
-      .exec();
+      .lean();
     if (!posts || posts.length === 0) {
       throw new NotFoundException(`This user doesn't have any posts.`);
     }
     return posts;
   }
 
-  async searchPosts(query: string, page: number, limit: number) {
-    console.log('Query', query);
+  async searchPosts(query: string, page: string, limit: string) {
+    const pageInt = parseInt(page);
+    const limitInt = parseInt(limit);
     const results = await this.postModel
       .find({
         $or: [
@@ -80,9 +81,9 @@ export class PostsService {
           { content: { $regex: query, $options: 'i' } },
         ],
       })
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .exec();
+      .skip((pageInt - 1) * limitInt)
+      .limit(limitInt)
+      .lean();
     if (!results) {
       throw new NotFoundException('Posts not founded');
     }

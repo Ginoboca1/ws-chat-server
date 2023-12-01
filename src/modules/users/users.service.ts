@@ -14,7 +14,7 @@ export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
   async getUsers(): Promise<User[]> {
-    const users = await this.userModel.find().select('-password').lean().exec();
+    const users = await this.userModel.find().select('-password').lean();
     if (!users || users.length === 0) {
       throw new NotFoundException('There are no users here');
     }
@@ -22,11 +22,7 @@ export class UsersService {
   }
 
   async getUserById(id: string) {
-    const user = await this.userModel
-      .findById(id)
-      .select('-password')
-      .lean()
-      .exec();
+    const user = await this.userModel.findById(id).select('-password').lean();
     if (!user) {
       throw new NotFoundException('User not founded');
     }

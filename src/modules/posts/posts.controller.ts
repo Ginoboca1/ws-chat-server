@@ -109,13 +109,12 @@ export class PostsController {
   @Get('/search')
   async searchPost(
     @Query('query') query: string,
-    @Query('page', new ParseIntPipe()) page: number = 1,
-    @Query('limit', new ParseIntPipe()) limit: number = 10,
+    @Query('page') page: string = '1',
+    @Query('limit') limit: string = '10',
     @Res() res: Response,
   ) {
     try {
       const data = await this.postsService.searchPosts(query, page, limit);
-      console.log(data);
       return res.status(200).json({ data });
     } catch (error) {
       throw error;
