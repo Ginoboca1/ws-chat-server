@@ -72,6 +72,9 @@ export class PostsService {
   }
 
   async searchPosts(query: string, page: string, limit: string) {
+    if (!query || query === '') {
+      throw new NotFoundException('Provide a title');
+    }
     const pageInt = parseInt(page);
     const limitInt = parseInt(limit);
     const results = await this.postModel

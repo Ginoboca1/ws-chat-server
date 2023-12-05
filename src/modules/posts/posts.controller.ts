@@ -61,6 +61,21 @@ export class PostsController {
     }
   }
 
+  @Get('/search')
+  async searchPost(
+    @Query('query') query: string,
+    @Query('page') page: string = '1',
+    @Query('limit') limit: string = '10',
+    @Res() res: Response,
+  ) {
+    try {
+      const data = await this.postsService.searchPosts(query, page, limit);
+      return res.status(200).json({ data });
+    } catch (error) {
+      throw error;
+    }
+  }
+
   @Get('/:id')
   async getUserById(@Param('id') id: string, @Res() res: Response) {
     try {
@@ -101,21 +116,6 @@ export class PostsController {
     try {
       const data = await this.postsService.getPostByUser(userId);
       return res.status(200).json(data);
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  @Get('/search')
-  async searchPost(
-    @Query('query') query: string,
-    @Query('page') page: string = '1',
-    @Query('limit') limit: string = '10',
-    @Res() res: Response,
-  ) {
-    try {
-      const data = await this.postsService.searchPosts(query, page, limit);
-      return res.status(200).json({ data });
     } catch (error) {
       throw error;
     }
