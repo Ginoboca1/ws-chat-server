@@ -10,6 +10,8 @@ import { RolesGuard } from '../auth/guards/roles.guard';
 export class AdminsController {
   constructor(private readonly adminService: AdminsService) {}
 
+  @Roles(Role.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('/users')
   async getAdmins(@Res() res: Response) {
     try {

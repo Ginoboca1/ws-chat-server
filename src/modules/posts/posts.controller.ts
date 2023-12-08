@@ -102,9 +102,13 @@ export class PostsController {
   }
 
   @Delete('/:id')
-  async deleteUser(@Param('id') id: string, @Res() res: Response) {
+  async deleteUser(
+    @Param('id') id: string,
+    @Res() res: Response,
+    @Req() req: UserRequest,
+  ) {
     try {
-      const data = await this.postsService.deletePost(id);
+      const data = await this.postsService.deletePost(req, id);
       return res.status(200).json(data);
     } catch (error) {
       throw error;

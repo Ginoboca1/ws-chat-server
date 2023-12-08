@@ -29,17 +29,20 @@ export class PostsService {
     }
     return posts;
   }
+
   async getPostById(id: string) {
-    const post = await this.postModel.findById(id).lean().lean();
+    const post = await this.postModel.findById(id).lean();
     if (!post) {
       throw new NotFoundException('Post not founded');
     }
     return post;
   }
+
   async updatePost(req, idParam: string, body: IPost) {
     const { id, role } = req.user;
-    if (!(id.toString() === idParam || role === 'admin')) {
-      throw new NotFoundException('You can only edit your own post');
+    const postToUpdate = await this.getPostById(idParam);
+    if (!(postToUpdate.userId.toString() === id || role === 'admin')) {
+      throw new NotFoundException('You can only upd your own post');
     }
     const updatedPost = await this.postModel
       .findByIdAndUpdate(idParam, body)
@@ -49,8 +52,14 @@ export class PostsService {
     }
     return { message: 'Post updated successfully', id: updatedPost._id };
   }
-  async deletePost(id: string): Promise<object> {
-    const postDeleted = await this.postModel.findByIdAndDelete(id);
+
+  async deletePost(req, idParam: string): Promise<object> {
+    const { id, role } = req.user;
+    const postToDelete = await this.getPostById(idParam);
+    if (!(postToDelete.userId.toString() === id || role === 'admin')) {
+      throw new NotFoundException('You can only delete your own post');
+    }
+    const postDeleted = await this.postModel.findByIdAndDelete(idParam);
     if (!postDeleted) {
       throw new NotFoundException('Post not founded');
     }
