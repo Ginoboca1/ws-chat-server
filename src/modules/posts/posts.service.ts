@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Post } from './models/post.schema';
@@ -100,5 +104,25 @@ export class PostsService {
       throw new NotFoundException('Posts not founded');
     }
     return results;
+  }
+
+  async filterByCategory(category: string, author: string) {
+    let query = {};
+    if (category && author) {
+      query = { categories: category, author };
+    } else if (category) {
+      query = { categories: category };
+    } else if (author) {
+      query = { author };
+    } else {
+      throw new BadRequestException(
+        'To filter, please provide an author or category',
+      );
+    }
+    const posts = await this.postModel.find(query);
+    if (!posts) {
+      throw new NotFoundException('Posts not founded');
+    }
+    return posts;
   }
 }

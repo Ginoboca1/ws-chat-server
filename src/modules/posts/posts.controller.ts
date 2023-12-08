@@ -76,6 +76,20 @@ export class PostsController {
     }
   }
 
+  @Get('/filter')
+  async filterByCategory(
+    @Query('category') category,
+    @Query('author') author,
+    @Res() res: Response,
+  ) {
+    try {
+      const data = await this.postsService.filterByCategory(category, author);
+      return res.status(200).json(data);
+    } catch (error) {
+      throw error;
+    }
+  }
+
   @Get('/:id')
   async getUserById(@Param('id') id: string, @Res() res: Response) {
     try {

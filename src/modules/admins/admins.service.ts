@@ -12,20 +12,15 @@ export class AdminsService {
   ) {}
 
   async getAdmins(): Promise<User[]> {
-    const admins = await this.userModel
-      .find({ role: 'admin' })
-      .select('-password')
-      .lean()
-      .lean();
-    if (!admins || admins.length === 0) {
-      throw new NotFoundException('There are no admins here');
+    const users = await this.userModel.find().select('-password').lean();
+    if (!users || users.length === 0) {
+      throw new NotFoundException('There are no users here');
     }
-    return admins;
+    return users;
   }
 
   async getAdminsPosts(): Promise<Post[]> {
     const admins = await this.postModel.find().lean();
-
     return admins;
   }
 }

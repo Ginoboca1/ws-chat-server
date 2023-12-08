@@ -57,7 +57,7 @@ export class UsersController {
   ) {
     try {
       const userId = req.user.id;
-      const data = await this.usersService.updateUser(id, userId, body);
+      const data = await this.usersService.updateUser(id, userId, body, req);
       return res.status(200).json({ data });
     } catch (error) {
       throw error;
