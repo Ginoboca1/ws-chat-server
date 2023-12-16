@@ -1,13 +1,13 @@
-import { Module } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
 import { HttpModule } from '@nestjs/axios';
-import { AuthModule } from 'src/modules/auth/auth.module';
+import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { Reflector } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
+import { AuthModule } from 'src/modules/auth/auth.module';
 import { UsersModule } from 'src/modules/users/users.module';
-import { PostsModule } from './modules/posts/posts.module';
-import { AdminsModule } from './modules/admins/admins.module';
 import { ChatModule } from './chat/chat.module';
+import { AdminsModule } from './modules/admins/admins.module';
+import { PostsModule } from './modules/posts/posts.module';
 
 @Module({
   imports: [
