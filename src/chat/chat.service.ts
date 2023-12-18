@@ -1,8 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { Client } from 'src/common/interfaces/client';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class ChatService {
+  constructor(public jwt: JwtService) {}
   private clients: Record<string, Client> = {};
 
   onClientConnected(client: Client) {
@@ -15,5 +17,13 @@ export class ChatService {
 
   getClients() {
     return Object.values(this.clients);
+  }
+
+  decodedToken(token: string) {
+    const decodedToken = this.jwt.decode(token);
+    if (!decodedToken) {
+      throw new UnauthorizedException('Token not provided');
+    }
+    return decodedToken;
   }
 }

@@ -10,6 +10,7 @@ import { OnModuleInit } from '@nestjs/common';
 })
 @WebSocketGateway()
 export class ChatGateway implements OnModuleInit {
+  private clientId: string | undefined; // Variable para almacenar el ID
   constructor(private chatService: ChatService) {}
 
   @WebSocketServer()
@@ -17,7 +18,17 @@ export class ChatGateway implements OnModuleInit {
 
   onModuleInit() {
     this.server.on('connect', (socket: Socket) => {
-      console.log(socket.handshake.auth.name);
+      socket.on('auth', (token) => {
+        const { name, id } = this.chatService.decodedToken(token);
+        this.clientId = id;
+        this.chatService.onClientConnected({ name, id });
+      });
+
+      this.server.emit('on-clients-changed', this.chatService.getClients());
+
+      socket.on('disconnect', () => {
+        this.chatService.onClientDisconnected(this.clientId);
+      });
     });
   }
 }
