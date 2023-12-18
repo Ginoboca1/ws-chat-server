@@ -57,4 +57,12 @@ export class AuthService {
     });
     return { message: `Logged successfully, ${user.name}`, token };
   }
+
+  async DecodedToken(token: string) {
+    const decodedToken = await this.jwt.decode(token);
+    if (!decodedToken) {
+      throw new UnauthorizedException('Token not provided');
+    }
+    return decodedToken;
+  }
 }

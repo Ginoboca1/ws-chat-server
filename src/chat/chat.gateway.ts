@@ -1,11 +1,7 @@
-import {
-  OnGatewayConnection,
-  OnGatewayDisconnect,
-  OnGatewayInit,
-  WebSocketGateway,
-  WebSocketServer,
-} from '@nestjs/websockets';
-import { Server } from 'socket.io';
+import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import { Server, Socket } from 'socket.io';
+import { ChatService } from './chat.service';
+import { OnModuleInit } from '@nestjs/common';
 
 @WebSocketGateway({
   cors: {
@@ -13,19 +9,15 @@ import { Server } from 'socket.io';
   },
 })
 @WebSocketGateway()
-export class ChatGateway
-  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
-{
+export class ChatGateway implements OnModuleInit {
+  constructor(private chatService: ChatService) {}
+
   @WebSocketServer()
   public server: Server;
 
-  afterInit(server: any) {
-    console.log('esto se ejecuta cuando inicia el servicio');
-  }
-  handleConnection(client: any, ...args: any[]) {
-    console.log('Esto se ejecuta cuando alguien se conecta al socket');
-  }
-  handleDisconnect(client: any) {
-    console.log('se ejecuta cuando alguien se desconecta');
+  onModuleInit() {
+    this.server.on('connect', (socket: Socket) => {
+      console.log(socket.handshake.auth.name);
+    });
   }
 }
