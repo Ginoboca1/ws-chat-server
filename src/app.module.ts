@@ -4,10 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { Reflector } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from 'src/modules/auth/auth.module';
-import { UsersModule } from 'src/modules/users/users.module';
-import { ChatModule } from './chat/chat.module';
-import { AdminsModule } from './modules/admins/admins.module';
-import { PostsModule } from './modules/posts/posts.module';
+import { ChatModule } from './modules/chat/chat.module';
 
 @Module({
   imports: [
@@ -18,9 +15,6 @@ import { PostsModule } from './modules/posts/posts.module';
     }),
     MongooseModule.forRoot(process.env.DB_URL),
     AuthModule,
-    UsersModule,
-    PostsModule,
-    AdminsModule,
     ChatModule,
   ],
   controllers: [],

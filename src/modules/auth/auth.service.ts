@@ -4,7 +4,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { User } from '../users/models/user.schema';
+import { User } from '../../models/user.schema';
 import { Model } from 'mongoose';
 import { SignUp } from './dto/auth-dto';
 import { comparePassword, hashPassword } from 'src/utils/bcrypt-passwords';
