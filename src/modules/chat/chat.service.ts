@@ -13,7 +13,6 @@ export class ChatService {
 
   onClientDisconnected(id: string) {
     delete this.clients[id];
-    console.log('cliente eliminado');
   }
 
   getClients() {
