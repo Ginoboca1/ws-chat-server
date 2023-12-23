@@ -1,4 +1,9 @@
-import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import {
+  MessageBody,
+  SubscribeMessage,
+  WebSocketGateway,
+  WebSocketServer,
+} from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { ChatService } from './chat.service';
 import { OnModuleInit } from '@nestjs/common';
@@ -10,7 +15,7 @@ import { OnModuleInit } from '@nestjs/common';
 })
 @WebSocketGateway()
 export class ChatGateway implements OnModuleInit {
-  private clientId: string | undefined; // Variable para almacenar el ID
+  private clientId: string | undefined;
   constructor(private chatService: ChatService) {}
 
   @WebSocketServer()
@@ -38,5 +43,14 @@ export class ChatGateway implements OnModuleInit {
         this.server.emit('on-clients-changed', this.chatService.getClients());
       });
     });
+  }
+
+  @SubscribeMessage('send-message')
+  handleMessage(@MessageBody() message: string, @MessageBody() token: string) {
+    const { name, id } = this.chatService.decodedToken(token[1]);
+    if (!message) {
+      return;
+    }
+    this.server.emit('on-message', { userId: id, userName: name, message });
   }
 }
