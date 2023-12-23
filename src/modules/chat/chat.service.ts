@@ -20,7 +20,6 @@ export class ChatService {
   }
 
   decodedToken(token: string) {
-    console.log(token);
     const decodedToken = this.jwt.decode(token);
     if (!decodedToken) {
       throw new UnauthorizedException('Token not provided');

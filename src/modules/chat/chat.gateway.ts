@@ -46,13 +46,11 @@ export class ChatGateway implements OnModuleInit {
   }
 
   @SubscribeMessage('send-message')
-  handleMessage(@MessageBody() message: string, token: string) {
-    console.log('TokenGateway: ', token, message);
-    // const { name, id } = this.chatService.decodedToken(token);
-    // console.log(name, message);
-    // if (!message) {
-    //   return;
-    // }
-    // this.server.emit('on-message', { userId: id, userName: name, message });
+  handleMessage(@MessageBody() message: string, @MessageBody() token: string) {
+    const { name, id } = this.chatService.decodedToken(token[1]);
+    if (!message) {
+      return;
+    }
+    this.server.emit('on-message', { userId: id, userName: name, message });
   }
 }
