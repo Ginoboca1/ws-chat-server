@@ -12,7 +12,7 @@ import { Response } from 'express';
 import { SignUp } from './dto/auth-dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { UserRequest } from 'src/common/interfaces/user-request';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
+// import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
