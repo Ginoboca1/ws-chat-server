@@ -13,7 +13,9 @@ import { ChatModule } from './modules/chat/chat.module';
       envFilePath: '.env',
       isGlobal: true,
     }),
-    MongooseModule.forRoot(process.env.DB_URL),
+    MongooseModule.forRoot(
+      'mongodb+srv://gnoboca:42180329Gnoboc@cluster0.vy7ivdw.mongodb.net/MovieNest',
+    ),
     AuthModule,
     ChatModule,
   ],
