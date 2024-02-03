@@ -12,8 +12,5 @@
       "dest": "api/$1",
       "methods": ["GET", "POST", "PUT", "DELETE"]
     }
-  ],
-  "engines": {
-    "node": "20.x"
-  }
+  ]
 }
