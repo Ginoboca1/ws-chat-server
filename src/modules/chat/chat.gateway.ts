@@ -15,7 +15,7 @@ import { OnModuleInit } from '@nestjs/common';
 })
 @WebSocketGateway()
 export class ChatGateway implements OnModuleInit {
-  private clientId: string | undefined;
+  private clientId: string;
   constructor(private chatService: ChatService) {}
 
   @WebSocketServer()
