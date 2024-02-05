@@ -6,7 +6,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: '*',
+    origin: 'https://ws-client-6ox0.onrender.com',
     methods: ['GET', 'POST'],
     credentials: true,
   });
